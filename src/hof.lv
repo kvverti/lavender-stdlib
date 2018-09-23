@@ -8,6 +8,10 @@
 ' The identity function. For all inputs 'a', '[Identity](a) = a'
 def Identity() => def value(a) => a
 
+' The function which returns `undefined` for all inputs. This function
+' has no codomain.
+def Nothing() => Constant(sys:undefined)
+
 ' Returns a constant function of the given value.
 def Constant(value) => def impl(a) => value
 
@@ -54,6 +58,18 @@ def withArgs(...args) => bindRight(\sys:call, args)
 ' Returns a function that folds any number of values using the given
 ' combining function.
 def folding(id, func) => def impl(...vals) => vals fold (id, func)
+
+' Returns the curried version of the given poly-arity function. The function
+' must have fixed arity greater than or equal to 1.
+(def curry(f)
+    let ar(len(f) - 1) =>
+    (def impl(args) =>
+        (def(a)
+            => impl(args ++ { a }) ; len(args) < ar
+            => sys:call(f, args ++ { a }) ; 1
+        )
+    )({})
+)
 
 ' The constant function of true.
 def True() => Constant(1)

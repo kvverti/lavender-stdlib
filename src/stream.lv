@@ -9,6 +9,12 @@
 ' Returns a stream that contains the elements of the given generator.
 def Stream(gen) => _StreamWrapper(gen, _ExtractingStream)
 
+' Returns a stream whose values are the indexes into `func`. This may be used
+' to, for example, turn a string into a stream.
+(def byIndex(func) =>
+    Stream(generator:withMap(0, bindRight(\+\, 1), func))
+)
+
 ' Returns a stream whose elements are the result of repeatedly
 ' applying the given function.
 def iterate(seed, f) => Stream(generator:of(seed, f))
