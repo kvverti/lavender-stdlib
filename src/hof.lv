@@ -13,7 +13,7 @@ def Identity() => def value(a) => a
 def Nothing() => Constant(sys:undefined)
 
 ' Returns a constant function of the given value.
-def Constant(value) => def impl(a) => value
+def Constant(=> value) => def impl(a) => value
 
 ' Returns the composition of 'f' and 'g'. The returned function
 ' is equivalent to 'f(g(a))' for all inputs 'a'.
@@ -70,6 +70,10 @@ def folding(id, func) => def impl(...vals) => vals fold (id, func)
         )
     )({})
 )
+
+' Returns a function that reverses the arguments to 'binaryop', passing
+' the first as the second and the second as the first.
+def flip(binaryop) => def impl(a, b) => binaryop(b, a)
 
 ' The constant function of true.
 def True() => Constant(1)

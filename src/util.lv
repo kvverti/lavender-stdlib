@@ -72,16 +72,6 @@ def Filter(set) => def impl(a) => a in set
     )
 )
 
-' Returns the curried form of the given binary function.
-def curry(binaryop) => def left(a) => def right(b) => binaryop(a, b)
-
-' Returns the uncurried form of the given curried binary function.
-def uncurry(curried) => def impl(a, b) => curried(a)(b)
-
-' Returns a function that reverses the arguments to 'binaryop', passing
-' the first as the second and the second as the first.
-def flip(binaryop) => def impl(a, b) => binaryop(b, a)
-
 ' An object which represents the half-open range [a..b). Ranges cannot be
 ' mapped or filtered, but they can be folded over. Ranges take up much
 ' less space compared to the equivalent vector of numbers.
