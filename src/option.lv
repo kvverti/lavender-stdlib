@@ -2,7 +2,6 @@
 ' the possible absence of a value.
 
 @import global using _
-@import hof using Constant
 
 ' Returns Some(value) if value is defined, None otherwise
 (def Option(value)

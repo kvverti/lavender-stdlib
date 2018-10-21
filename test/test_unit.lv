@@ -21,6 +21,7 @@ def main(args) => test:format(
     assert((Col ++ Unit) = Col, "Col ++ Unit"),
     assert((Unit ++ Unit) = Unit, "Unit ++ Unit"),
     assert((Unit limit 10) = Unit, "Unit limit"),
-    assert((Unit slice (0, 10)) = Unit, "Unit slice"),
+    assert((Unit slice (0, 0)) = Unit, "Unit slice"),
+    assert((Unit slice (0, 10)) = sys:undefined, "Unit slice undefined"),
     assert((Unit toVect) = {}, "Unit toVect")
 )

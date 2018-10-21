@@ -290,6 +290,10 @@ def i_then(obj, val) => obj flatmap _const(val)
     (obj onlyIf isObject(obj))(\fold\)(id, func) else sys:__fold__(obj, id, func)
 )
 
+' Combines the elements of the given object according to the given fold
+' function, using the head of the object as the initial value.
+def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
+
 ' Concatenates the elements of the two objects.
 (def i_++(obj1, obj2)
     => obj1 ; sys:__eq__(obj2, Unit) ' Concatenating Unit does nothing

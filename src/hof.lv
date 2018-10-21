@@ -5,7 +5,7 @@
 
 @import global using _
 
-' The identity function. For all inputs 'a', '[Identity](a) = a'
+' The identity function. For all inputs `a`, `Identity(a) = a`
 def Identity() => def value(a) => a
 
 ' The function which returns `undefined` for all inputs. This function
@@ -22,7 +22,7 @@ def r_o(f, g) => def impl(a) => f(g(a))
 ' Returns a function equivalent to applying the function
 ' 'f' and then 'g' on inputs. This is equivalent to the composition of 'g'
 ' and 'f'.
-def i_andThen(f, g) => def impl(a) => g(f(a))
+def i_andThen(f, g) => g o f
 
 ' Returns a function equivalent to applying the function
 ' 'g' where 'f' is undefined, and 'f' otherwise. This is equivalent
@@ -47,7 +47,7 @@ def i_|>(func, pred) => (Identity <| pred) o func
 def i_restrictRight(func, pred) => func |> pred
 
 ' Binds the left operand of a binary operator.
-def bindLeft(op, left) => def impl(right) => op(left, right)
+def bindLeft(left, op) => def impl(right) => op(left, right)
 
 ' Binds the right operand of a binary operator.
 def bindRight(op, right) => def impl(left) => op(left, right)
@@ -58,6 +58,17 @@ def withArgs(...args) => bindRight(\sys:call, args)
 ' Returns a function that folds any number of values using the given
 ' combining function.
 def folding(id, func) => def impl(...vals) => vals fold (id, func)
+
+' Returns a function that folds any nonzero number of values using the
+' given combining function.
+def reducing(func) => def impl(head, ...tail) => tail fold (head, func)
+
+' Returns a function that maps an object using the given function.
+def lift(func) => bindRight(\map\, func)
+
+' Returns a binary function that applies the given binary function to the
+' elements of its argument objects.
+def lift2(func) => def(a, b) => a zip b map bindLeft(func, \sys:call)
 
 ' Returns the curried version of the given poly-arity function. The function
 ' must have fixed arity greater than or equal to 1.
@@ -84,12 +95,12 @@ def False() => Constant(0)
 ' Returns a predicate from the given function. A predicate
 ' returns true if the result is truthy, and false if the
 ' result is falsy.
-def pred(func) => def impl(a) => bool(func(a))
+def pred(func) => \bool o func
 
 ' Returns the logical negation of the given function. The returned function
 ' returns 'true' where the given function returns a falsy value, and similarly
 ' for 'false' and truthy values.
-def not(func) => def impl(a) => !(func(a))
+def not(func) => \! o func
 
 ' Returns the intersection of the given functions. The returned function
 ' returns true if and only if both input functions return true.

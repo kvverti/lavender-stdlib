@@ -9,6 +9,9 @@
 ' Returns a stream that contains the elements of the given generator.
 def Stream(gen) => _StreamWrapper(gen, _ExtractingStream)
 
+' Returns a stream containing the given elements.
+def of(...els) => byIndex(els)
+
 ' Returns a stream whose values are the indexes into `func`. This may be used
 ' to, for example, turn a string into a stream.
 (def byIndex(func) =>
@@ -43,7 +46,7 @@ def _nextSeeded(func) => def(a) => tail(a) ++ { sys:call(func, a) }
 )
 
 ' The infinite stream of natural numbers.
-def Indices() => Stream(generator:of(0, bindRight(\+\, 1)))
+def Indices() => byIndex(Identity)
 
 ' Returns a stream containing the first `n` elements of the given sequence.
 def i_take(seq, n) => seq zip Indices takeWhile (def(a) => a(1) < n) map withArgs(0)
