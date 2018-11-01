@@ -46,6 +46,12 @@ def i_|>(func, pred) => (Identity <| pred) o func
 ' Alternative spelling of '|>'.
 def i_restrictRight(func, pred) => func |> pred
 
+' Partially applies the given function's initial arguments.
+def bindFirst(f, ...args) => def impl(...last) => sys:call(f, args ++ last)
+
+' Partially applies the given function's final arguments.
+def bindLast(f, ...args) => def impl(...init) => sys:call(f, init ++ args)
+
 ' Binds the left operand of a binary operator.
 def bindLeft(left, op) => def impl(right) => op(left, right)
 
