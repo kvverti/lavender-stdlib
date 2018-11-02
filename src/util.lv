@@ -51,7 +51,7 @@ def binarySearch(vect, elem) => binarySearchAs(vect, elem, \<\)
 (def SetOf(func) =>
     (def obj(a)
         => __yes__ ; a = __object__
-        => func ; a = \in\
+        => func ; a = .in
     )
 )
 
@@ -65,11 +65,11 @@ def Filter(set) => def impl(a) => a in set
         => __yes__ ; c = __object__
         => a ; c = 0
         => b ; c = 1
-        => 2 ; c = \len
-        => str(a) ++ " -> " ++ str(b) ; c = \str
-        => (def(f) => Pair(f(a), f(b))) ; c = \map\
-        => (def(id, f) => f(f(id, a), b)) ; c = \fold\
-        => { a, b } ; c = \toVect\
+        => 2 ; c = .len
+        => str(a) ++ " -> " ++ str(b) ; c = .str
+        => (def(f) => Pair(f(a), f(b))) ; c = .map
+        => (def(id, f) => f(f(id, a), b)) ; c = .fold
+        => { a, b } ; c = .toVect
     )
 )
 
@@ -79,11 +79,11 @@ def Filter(set) => def impl(a) => a in set
 (def Range(a, b) =>
     (def obj(c)
         => __yes__ ; c = __object__
-        => b - a ; c = \len
-        => "[" ++ str(a) ++ ".." ++ str(b) ++ ")" ; c = \str
-        => (def(el) => el >= a && el < b) ; c = \in\
-        => (def(id, f) => _rangeFold(a, b, f)(id, a)) ; c = \fold\
-        => \obj fold ({}, \sys:cat) ; c = \toVect\
+        => b - a ; c = .len
+        => "[" ++ str(a) ++ ".." ++ str(b) ++ ")" ; c = .str
+        => (def(el) => el >= a && el < b) ; c = .in
+        => (def(id, f) => _rangeFold(a, b, f)(id, a)) ; c = .fold
+        => \obj fold ({}, \sys:cat) ; c = .toVect
     )
 )
 

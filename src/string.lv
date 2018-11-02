@@ -3,10 +3,6 @@
 
 @import global using _
 
-' Value representing the end index of a string to
-' functions in this namespace.
-def End() => def value(a) => sys:undefined
-
 ' ASCII Whitespace characters.
 def AsciiSpace() => " \t\n"
 
@@ -40,8 +36,10 @@ def AsciiPunct() => "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 ' Takes the substring of the given string beginning at start and
 ' n characters in length. This is similar to the global function
 ' `slice`, except that it accepts a length instead of an end position.
+' Passing the special symbol `.End` for `len` results in the remainder
+' of the string from `start` being returned.
 (def i_substr(self, start, len)
-    => sys:__slice__(self, start, global:len(self)) ; len = End
+    => sys:__slice__(self, start, global:len(self)) ; len = .End
     => sys:__slice__(self, start, start + len) ; 1
 )
 

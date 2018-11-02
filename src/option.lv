@@ -13,15 +13,15 @@
 (def Some(a) =>
     (def obj(b)
         => __yes__ ; b = __object__
-        => 1 ; b = \len
-        => "Some(" ++ str(a) ++ ")" ; b = \str
-        => (def(f) => Option(f(a))) ; b = \map\
-        => (def(f) => f(a)) ; b = \flatmap\
+        => 1 ; b = .len
+        => "Some(" ++ str(a) ++ ")" ; b = .str
+        => (def(f) => Option(f(a))) ; b = .map
+        => (def(f) => f(a)) ; b = .flatmap
         => (def(f)
             => \obj ; f(a)
-            => None ; 1) ; b = \filter\
-        => (def(obj2) => Some({ a, sys:cval(obj2, 0) })) ; b = \zip\
-        => (def(id, f) => f(id, a)) ; b = \fold\
+            => None ; 1) ; b = .filter
+        => (def(obj2) => Some({ a, sys:cval(obj2, 0) })) ; b = .zip
+        => (def(id, f) => f(id, a)) ; b = .fold
     )
 )
 

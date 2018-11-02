@@ -21,19 +21,19 @@ def Vect(a) => { a }
     (def value(a)
         let self(_const(\value))
         => __yes__ ; sys:__eq__(a, __object__)
-        => 0 ; sys:__eq__(a, \len)
-        => 0 ; sys:__eq__(a, \in\)
-        => "()" ; sys:__eq__(a, \str)
-        => self ; sys:__eq__(a, \map\)
-        => self ; sys:__eq__(a, \flatmap\)
-        => self ; sys:__eq__(a, \filter\)
-        => (def(id, f) => id) ; sys:__eq__(a, \fold\)
-        => (def(a) => a) ; sys:__eq__(a, \++\)
-        => self ; sys:__eq__(a, \limit\)
+        => 0 ; sys:__eq__(a, .len)
+        => 0 ; sys:__eq__(a, .in)
+        => "()" ; sys:__eq__(a, .str)
+        => self ; sys:__eq__(a, .map)
+        => self ; sys:__eq__(a, .flatmap)
+        => self ; sys:__eq__(a, .filter)
+        => (def(id, f) => id) ; sys:__eq__(a, .fold)
+        => (def(a) => a) ; sys:__eq__(a, .cat)
+        => self ; sys:__eq__(a, .limit)
         => (def(bgn, end)
             => \value ; sys:__eq__(bgn, 0) && sys:__eq__(end, 0)
-        ) ; sys:__eq__(a, \slice\)
-        => {} ; sys:__eq__(a, \toVect\)
+        ) ; sys:__eq__(a, .slice)
+        => {} ; sys:__eq__(a, .toVect)
     )
 )
 
@@ -120,8 +120,8 @@ def i_onlyIf(=> expr, pred) => expr ; pred
 ' * The only value which breaks reflexivity is the floating point
 '   NaN value.
 (def i_=(a, b)
-    => a(\=\)(b) ; sys:defined((a onlyIf isObject(a))(\=\))
-                    && sys:defined((b onlyIf isObject(b))(\=\))
+    => a(\=\)(b) ; sys:defined((a onlyIf isObject(a))(.eq))
+                && sys:defined((b onlyIf isObject(b))(.eq))
     => sys:__eq__(a, b) ; 1
 )
 
@@ -142,16 +142,16 @@ def i_!=(a, b) => !(a = b)
 '
 ' * NaN always compares false with anything, even itself.
 (def i_<(a, b)
-    => a(\<\)(b) ; sys:defined((a onlyIf isObject(a))(\<\))
-                && sys:defined((b onlyIf isObject(b))(\<\))
+    => a(\<\)(b) ; sys:defined((a onlyIf isObject(a))(.lt))
+                && sys:defined((b onlyIf isObject(b))(.lt))
     => sys:__lt__(a, b) ; 1
 )
 
 ' Greater than or equal comparision function.
 (def i_>=(a, b)
     ' We do this because NaN always compares false.
-    => !(a(\<\)(b)) ; sys:defined((a onlyIf isObject(a))(\<\))
-                    && sys:defined((b onlyIf isObject(b))(\<\))
+    => !(a(\<\)(b)) ; sys:defined((a onlyIf isObject(a))(.lt))
+                    && sys:defined((b onlyIf isObject(b))(.lt))
     => sys:__ge__(a, b) ; 1
 )
 
@@ -162,103 +162,103 @@ def i_>(a, b) => b < a
 def i_<=(a, b) => b >= a
 
 ' Converts argument to a string. Forwards if possible.
-def str(a) => (a onlyIf isObject(a))(\str) else sys:__str__(a)
+def str(a) => (a onlyIf isObject(a))(.str) else sys:__str__(a)
 
 ' Converts argument to number. Forwards if possible.
-def num(a) => (a onlyIf isObject(a))(\num) else sys:__num__(a)
+def num(a) => (a onlyIf isObject(a))(.num) else sys:__num__(a)
 
 ' Converts argument to int. Forwards if possible.
-def int(a) => (a onlyIf isObject(a))(\int) else sys:__int__(a)
+def int(a) => (a onlyIf isObject(a))(.int) else sys:__int__(a)
 
 ' Converts the argument to bool. Forwards if possible.
-def bool(a) => (a onlyIf isObject(a))(\bool) else sys:__bool__(a)
+def bool(a) => (a onlyIf isObject(a))(.bool) else sys:__bool__(a)
 
 ' Returns the length of the argument. Forwards if possible.
 ' For strings, returns the length. For functions, returns the arity.
 ' For numbers, returns undefined.
-def len(a) => (a onlyIf isObject(a))(\len) else sys:__len__(a)
+def len(a) => (a onlyIf isObject(a))(.len) else sys:__len__(a)
 
 ' Returns the head of the argument. Forwards if possible.
-def head(a) => (a onlyIf isObject(a))(\head) else a(0)
+def head(a) => (a onlyIf isObject(a))(.head) else a(0)
 
 ' Returns the tail of the argument. Forwards if possible.
-def tail(a) => (a onlyIf isObject(a))(\tail) else (a slice (1, len(a)))
+def tail(a) => (a onlyIf isObject(a))(.tail) else (a slice (1, len(a)))
 
 ' Unary + function. Forwards if defined for its argument.
 ' This is a no-op for numbers, but returns undefined
 ' if the argument is not a number.
-def +(a) => (a onlyIf isObject(a))(\+) else sys:__pos__(a)
+def +(a) => (a onlyIf isObject(a))(.pos) else sys:__pos__(a)
 
 ' Negation function. Forwards if negation is defined for
 ' its argument.
-def -(a) => (a onlyIf isObject(a))(\-) else sys:__neg__(a)
+def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 
 ' Addition function. Forwards if addition is defined for both
 ' arguments.
 (def i_+(a, b)
-    => a(\+\)(b) ; sys:defined((a onlyIf isObject(a))(\+\))
-                && sys:defined((b onlyIf isObject(b))(\+\))
+    => a(\+\)(b) ; sys:defined((a onlyIf isObject(a))(.add))
+                && sys:defined((b onlyIf isObject(b))(.add))
     => sys:__add__(a, b) ; 1
 )
 
 ' Subtraction function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_-(a, b)
-    => a(\-\)(b) ; sys:defined((a onlyIf isObject(a))(\-\))
-                && sys:defined((b onlyIf isObject(b))(\-\))
+    => a(\-\)(b) ; sys:defined((a onlyIf isObject(a))(.sub))
+                && sys:defined((b onlyIf isObject(b))(.sub))
     => sys:__sub__(a, b) ; 1
 )
 
 ' Multiplication function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_*(a, b)
-    => a(\*\)(b) ; sys:defined((a onlyIf isObject(a))(\*\))
-                && sys:defined((b onlyIf isObject(b))(\*\))
+    => a(\*\)(b) ; sys:defined((a onlyIf isObject(a))(.mul))
+                && sys:defined((b onlyIf isObject(b))(.mul))
     => sys:__mul__(a, b) ; 1
 )
 
 ' Division function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_/(a, b)
-    => a(\/\)(b) ; sys:defined((a onlyIf isObject(a))(\/\))
-                && sys:defined((b onlyIf isObject(b))(\/\))
+    => a(\/\)(b) ; sys:defined((a onlyIf isObject(a))(.div))
+                && sys:defined((b onlyIf isObject(b))(.div))
     => sys:__div__(a, b) ; 1
 )
 
 ' Integer division function. Forwards if integer division is
 ' defined for both arguments.
 (def i_//(a, b)
-    => a(\//\)(b) ; sys:defined((a onlyIf isObject(a))(\//\))
-                 && sys:defined((b onlyIf isObject(b))(\//\))
+    => a(\//\)(b) ; sys:defined((a onlyIf isObject(a))(.idiv))
+                 && sys:defined((b onlyIf isObject(b))(.idiv))
     => sys:__idiv__(a, b) ; 1
 )
 
 ' Remainder function. Forwards if remainder is defined for
 ' both arguments.
 (def i_%(a, b)
-    => a(\%\)(b) ; sys:defined((a onlyIf isObject(a))(\%\))
-                && sys:defined((b onlyIf isObject(b))(\%\))
+    => a(\%\)(b) ; sys:defined((a onlyIf isObject(a))(.rem))
+                && sys:defined((b onlyIf isObject(b))(.rem))
     => sys:__rem__(a, b) ; 1
 )
 
 ' Exponentiation function. Forwards if exponentiation is defined
 ' for both arguments.
 (def r_**(a, b)
-    => a(\**\)(b) ; sys:defined((a onlyIf isObject(a))(\**\))
-                 && sys:defined((b onlyIf isObject(b))(\**\))
+    => a(\**\)(b) ; sys:defined((a onlyIf isObject(a))(.pow))
+                 && sys:defined((b onlyIf isObject(b))(.pow))
     => sys:__pow__(a, b) ; 1
 )
 
 ' Maps each element of the given object using the given mapping
 ' function.
 (def i_map(obj, func) =>
-    (obj onlyIf isObject(obj))(\map\)(func) else sys:__map__(obj, func)
+    (obj onlyIf isObject(obj))(.map)(func) else sys:__map__(obj, func)
 )
 
 ' Maps each element of the given object to zero or more new values
 ' using the given mapping function.
 (def i_flatmap(obj, func)
-    => obj(\flatmap\)(func) ; isObject(obj)
+    => obj(.flatmap)(func) ; isObject(obj)
     => obj map func fold (Unit, \++\) ; 1
 )
 
@@ -267,27 +267,27 @@ def i_then(obj, val) => obj flatmap _const(val)
 ' Filters the elements of the given object according to the given
 ' predicate.
 (def i_filter(obj, func) =>
-    (obj onlyIf isObject(obj))(\filter\)(func) else sys:__filter__(obj, func)
+    (obj onlyIf isObject(obj))(.filter)(func) else sys:__filter__(obj, func)
 )
 
 ' Returns the longest prefix of the given sequence whose elements satisfy
 ' the given predicate.
 (def i_takeWhile(obj, func)
-    => obj(\takeWhile\)(func) ; isObject(obj)
+    => obj(.takeWhile)(func) ; isObject(obj)
     => sys:__take__(obj, func) ; 1
 )
 
 ' Drops the longest prefix of the given sequence whose elements satisfy
 ' the given predicate, and returns the remaining elements.
 (def i_skipWhile(obj, func)
-    => obj(\skipWhile\)(func) ; isObject(obj)
+    => obj(.skipWhile)(func) ; isObject(obj)
     => sys:__skip__(obj, func) ; 1
 )
 
 ' Combines the elements of the given object according to the
 ' given fold function with the given initial value.
 (def i_fold(obj, id, func) =>
-    (obj onlyIf isObject(obj))(\fold\)(id, func) else sys:__fold__(obj, id, func)
+    (obj onlyIf isObject(obj))(.fold)(id, func) else sys:__fold__(obj, id, func)
 )
 
 ' Combines the elements of the given object according to the given fold
@@ -298,7 +298,7 @@ def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
 (def i_++(obj1, obj2)
     => obj1 ; sys:__eq__(obj2, Unit) ' Concatenating Unit does nothing
     => obj2 ; sys:__eq__(obj1, Unit) ' Concatenating Unit does nothing
-    => obj1(\++\)(obj2) ; isObject(obj1)
+    => obj1(.cat)(obj2) ; isObject(obj1)
     => sys:__concat__(obj1, obj2) ; 1
 )
 
@@ -307,7 +307,7 @@ def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
 ' (if any) is truncated to the length of the shorter sequence.
 (def i_zip(obj1, obj2)
     => Unit ; sys:__eq__(len(obj1), 0) || sys:__eq__(len(obj2), 0)
-    => obj1(\zip\)(obj2) ; isObject(obj1)
+    => obj1(.zip)(obj2) ; isObject(obj1)
     => _zip(obj1, obj2) ; sys:typeof(obj1) = "vect"
 )
 
@@ -322,12 +322,12 @@ def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
 
 ' Returns the subsequence of obj from bgn (inclusive) to end (exclusive).
 (def i_slice(obj, bgn, end) =>
-    (obj onlyIf isObject(obj))(\slice\)(bgn, end) else sys:__slice__(obj, bgn, end)
+    (obj onlyIf isObject(obj))(.slice)(bgn, end) else sys:__slice__(obj, bgn, end)
 )
 
 ' Truncates the sequence to its first `len` elements.
 (def i_limit(obj, len)
-    => (obj onlyIf isObject(obj))(\limit\)(len) else (obj slice (0, len))
+    => (obj onlyIf isObject(obj))(.limit)(len) else (obj slice (0, len))
 )
 
 ' Returns whether the given element is contained in the given object.
@@ -336,7 +336,7 @@ def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
         ; sys:__eq__(sys:typeof(obj), "vect")
     => _in_str(el, obj, sys:__sub__(sys:__len__(obj), sys:__len__(el)), sys:__len__(el))
         ; sys:__eq__(sys:typeof(obj), "string")
-    => obj(\in\)(el) ; 1
+    => obj(.in)(el) ; 1
 )
 
 ' Returns !(el in obj).
@@ -359,5 +359,5 @@ def i_notin(el, obj) => !(el in obj)
 ' Converts the given object to a vect.
 (def i_toVect(obj)
     => obj ; sys:__eq__(sys:typeof(obj), "vect")
-    => (obj onlyIf isObject(obj))(\toVect\) ; 1
+    => (obj onlyIf isObject(obj))(.toVect) ; 1
 )

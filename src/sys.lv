@@ -24,6 +24,9 @@ def cat(...vals) => native
 ' `call(f, { a, b, ... })` is equivalent to `f(a, b, ...)`.
 def call(func, args) => native
 
+' Returns the symbol associated with the given string.
+def symb(str) => native
+
 ' The following functions are stubs for basic operations on the built in types
 ' num, int, str, and vect. You should not consider these to be part of the
 ' sys public API.
