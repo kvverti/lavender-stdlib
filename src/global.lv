@@ -120,7 +120,7 @@ def i_onlyIf(=> expr, pred) => expr ; pred
 ' * The only value which breaks reflexivity is the floating point
 '   NaN value.
 (def i_=(a, b)
-    => a(\=\)(b) ; sys:defined((a onlyIf isObject(a))(.eq))
+    => a(.eq)(b) ; sys:defined((a onlyIf isObject(a))(.eq))
                 && sys:defined((b onlyIf isObject(b))(.eq))
     => sys:__eq__(a, b) ; 1
 )
@@ -142,7 +142,7 @@ def i_!=(a, b) => !(a = b)
 '
 ' * NaN always compares false with anything, even itself.
 (def i_<(a, b)
-    => a(\<\)(b) ; sys:defined((a onlyIf isObject(a))(.lt))
+    => a(.lt)(b) ; sys:defined((a onlyIf isObject(a))(.lt))
                 && sys:defined((b onlyIf isObject(b))(.lt))
     => sys:__lt__(a, b) ; 1
 )
@@ -150,7 +150,7 @@ def i_!=(a, b) => !(a = b)
 ' Greater than or equal comparision function.
 (def i_>=(a, b)
     ' We do this because NaN always compares false.
-    => !(a(\<\)(b)) ; sys:defined((a onlyIf isObject(a))(.lt))
+    => !(a(.lt)(b)) ; sys:defined((a onlyIf isObject(a))(.lt))
                     && sys:defined((b onlyIf isObject(b))(.lt))
     => sys:__ge__(a, b) ; 1
 )
@@ -196,7 +196,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Addition function. Forwards if addition is defined for both
 ' arguments.
 (def i_+(a, b)
-    => a(\+\)(b) ; sys:defined((a onlyIf isObject(a))(.add))
+    => a(.add)(b) ; sys:defined((a onlyIf isObject(a))(.add))
                 && sys:defined((b onlyIf isObject(b))(.add))
     => sys:__add__(a, b) ; 1
 )
@@ -204,7 +204,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Subtraction function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_-(a, b)
-    => a(\-\)(b) ; sys:defined((a onlyIf isObject(a))(.sub))
+    => a(.sub)(b) ; sys:defined((a onlyIf isObject(a))(.sub))
                 && sys:defined((b onlyIf isObject(b))(.sub))
     => sys:__sub__(a, b) ; 1
 )
@@ -212,7 +212,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Multiplication function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_*(a, b)
-    => a(\*\)(b) ; sys:defined((a onlyIf isObject(a))(.mul))
+    => a(.mul)(b) ; sys:defined((a onlyIf isObject(a))(.mul))
                 && sys:defined((b onlyIf isObject(b))(.mul))
     => sys:__mul__(a, b) ; 1
 )
@@ -220,7 +220,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Division function. Forwards if subtraction is defined for
 ' both arguments.
 (def i_/(a, b)
-    => a(\/\)(b) ; sys:defined((a onlyIf isObject(a))(.div))
+    => a(.div)(b) ; sys:defined((a onlyIf isObject(a))(.div))
                 && sys:defined((b onlyIf isObject(b))(.div))
     => sys:__div__(a, b) ; 1
 )
@@ -228,7 +228,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Integer division function. Forwards if integer division is
 ' defined for both arguments.
 (def i_//(a, b)
-    => a(\//\)(b) ; sys:defined((a onlyIf isObject(a))(.idiv))
+    => a(.idiv)(b) ; sys:defined((a onlyIf isObject(a))(.idiv))
                  && sys:defined((b onlyIf isObject(b))(.idiv))
     => sys:__idiv__(a, b) ; 1
 )
@@ -236,7 +236,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Remainder function. Forwards if remainder is defined for
 ' both arguments.
 (def i_%(a, b)
-    => a(\%\)(b) ; sys:defined((a onlyIf isObject(a))(.rem))
+    => a(.rem)(b) ; sys:defined((a onlyIf isObject(a))(.rem))
                 && sys:defined((b onlyIf isObject(b))(.rem))
     => sys:__rem__(a, b) ; 1
 )
@@ -244,7 +244,7 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
 ' Exponentiation function. Forwards if exponentiation is defined
 ' for both arguments.
 (def r_**(a, b)
-    => a(\**\)(b) ; sys:defined((a onlyIf isObject(a))(.pow))
+    => a(.pow)(b) ; sys:defined((a onlyIf isObject(a))(.pow))
                  && sys:defined((b onlyIf isObject(b))(.pow))
     => sys:__pow__(a, b) ; 1
 )
