@@ -86,21 +86,51 @@ def i_skip(seq, n) => seq zip Indices skipWhile (def(a) => a(1) < n) map withArg
     )
 )
 
-' Concatenating streams is implemented with a special generator.
-' Warning: slow!
-def _StreamConcat(seq1, seq2) => _StreamWrapper(_concatGen(seq1, seq2), _ExtractingStream)
-
-(def _concatGen(seq1, seq2) =>
-    generator:withMap({ seq1, seq2 }, \_concatTail, \_concatHead)
+' Separate wrapper stream for concatted streams.
+(def _StreamConcat(seq1, seq2) =>
+    (def obj(a)
+        => __yes__ ; a = __object__
+        => "Stream(...)" ; a = .str
+        => head(seq1) else head(seq2) ; a = .head
+        => sys:defined(tail(seq1)) ?: (_StreamConcat(tail(seq1), seq2), tail(seq2)) ; a = .tail
+        => (def(id, f) => seq2 fold (seq1 fold (id, f), f)) ; a = .fold
+        => (def(f) => _StreamConcat(seq1 map f, seq2 map f)) ; a = .map
+        => (def(f) => _StreamConcat(seq1 flatmap f, seq2 flatmap f)) ; a = .flatmap
+        => (def(f) => _StreamConcat(seq1 filter f, seq2 filter f)) ; a = .filter
+        => (def(f) => _StreamWrapper(\obj, _ConcatTaker(f))) ; a = .takeWhile
+        => (def(f) => _StreamWrapper(\obj, _ConcatSkipper(f))) ; a = .skipWhile
+        => (def(other) => _StreamZipped(\obj, other)) ; a = .zip
+        => (def(other) => _StreamConcat(\obj, other)) ; a = .cat
+        => \obj fold ({}, def(ac, el) => ac ++ { el }) ; a = .toVect
+    )
 )
 
-def _concatHead(seqs) => head(seqs(0))
+' Trans value getter for takeWhile operation on concatted streams.
+(def _ConcatTaker(f) =>
+    _BaseStream(
+        def(gen) let val(head(gen))
+            => { tail(gen), val } ; sys:defined(val) && f(val)
+    )
+)
 
-(def _concatTail(seqs)
-    let t0(tail(seqs(0)))
-    => { t0 } ; len(seqs) = 1
-    => { t0, seqs(1) } ; sys:defined(head(t0))
-    => { seqs(1) } ; 1
+' Trans value getter for skipWhile operation on concatted streams.
+(def _ConcatSkipper(f) =>
+    _BaseStream(
+        def(gen)
+            => _skipCatNonInit(f, gen) ; sys:typeof(gen) = "vect"
+            => _skipCatInitial(f, gen) ; 1
+    )
+)
+
+(def _skipCatInitial(pred, gen)
+    let val(head(gen))
+    => sys:undefined ; !sys:defined(val)
+    => _skipCatInitial(pred, tail(gen)) ; pred(val)
+    => { { tail(gen) }, val } ; 1
+)
+
+(def _skipCatNonInit(pred, gen)
+    let val(head(gen(0))) => { gen map \tail, val } ; sys:defined(val)
 )
 
 ' Zipping streams after a flatmap operation is implemented with a special
@@ -132,6 +162,7 @@ def _StreamZipped(seq1, seq2) => _StreamWrapper(_zippedGen(seq1, seq2), _Extract
         => (def(f) => _StreamWrapper(gen, stream(a)(f))) ; sys:defined(stream(a))
         => (def(other) => _StreamZipped(\obj, other)) ; a = .zip
         => (def(other) => _StreamConcat(\obj, other)) ; a = .cat
+        => \obj fold ({}, def(ac, el) => ac ++ { el }) ; a = .toVect
     )
 )
 
@@ -228,11 +259,21 @@ def _StreamZipped(seq1, seq2) => _StreamWrapper(_zippedGen(seq1, seq2), _Extract
 
 (def _SkippingStream(pred, prev) =>
     _BaseStream(
-        def skip(gen) let val(prev(.transValue)(gen))
-            => sys:undefined ; !sys:defined(val)
-            => skip(val(0)) ; pred(val(1))
-            => val ; 1
+        def(gen)
+            => _skipTransNonInit(pred, prev, gen) ; sys:typeof(gen) = "vect"
+            => _skipTransInitial(pred, prev, gen) ; 1
     )
+)
+
+(def _skipTransInitial(pred, prev, gen)
+    let val(prev(.transValue)(gen))
+    => sys:undefined ; !sys:defined(val)
+    => _skipTransInitial(pred, prev, val(0)) ; pred(val(1))
+    => { { val(0) }, val(1) } ; 1
+)
+
+(def _skipTransNonInit(pred, prev, gen)
+    let val(prev(.transValue)(gen(0))) => { { val(0) }, val(1) } ; sys:defined(val)
 )
 
 (def _PostFlatSkippingStream(pred, prev) =>
