@@ -161,6 +161,11 @@ def i_>(a, b) => b < a
 ' Less than or equal to comparison function.
 def i_<=(a, b) => b >= a
 
+' Returns a hash of the given value. The hash of a value is an integral
+' value that may be used to short-circuit comparisons. The hash of a value
+' must be consistent with its equality (equal values must have equal hashes).
+def hash(a) => (a onlyIf isObject(a))(.hash) else sys:__hash__(a)
+
 ' Converts argument to a string. Forwards if possible.
 def str(a) => (a onlyIf isObject(a))(.str) else sys:__str__(a)
 
