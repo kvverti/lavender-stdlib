@@ -1,8 +1,6 @@
 ' The math namespace contains mathematical
 ' functions which operate on numeric values.
 
-@import sys
-
 ' The floating point NaN value.
 def NaN() => sys:__num__("NaN")
 

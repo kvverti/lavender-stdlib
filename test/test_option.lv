@@ -1,4 +1,3 @@
-@import global using _
 @import option using _
 @import assert using assert
 @import hof using False

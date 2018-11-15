@@ -2,7 +2,6 @@
 ' functions that take in an input (the seed) and return two outputs:
 ' the new seed and the output value.
 
-@import global using _
 @import hof using Identity, bindRight
 
 ' Returns a generator which uses the given functions to generate new values.

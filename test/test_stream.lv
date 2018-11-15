@@ -1,4 +1,3 @@
-@import global using _
 @import hof using bindRight
 @import generator
 @import stream using Stream, Indices, take, skip

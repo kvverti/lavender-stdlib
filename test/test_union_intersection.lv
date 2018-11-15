@@ -1,4 +1,3 @@
-@import global using _
 @import assert using assert
 @import hof using union, intersection
 @import test

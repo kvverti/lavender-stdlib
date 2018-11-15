@@ -1,6 +1,5 @@
 ' The util namespace contains miscellaneous utility functions.
 
-@import global using _
 @import hof using flip
 
 ' Returns the minimum of the given values, according to the

@@ -2,7 +2,6 @@
 ' of values. Every stream is driven by a generator, whose values are
 ' transformed according to the functions applied to the stream.
 
-@import global using _
 @import hof using _
 @import generator
 

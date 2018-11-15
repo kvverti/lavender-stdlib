@@ -2,8 +2,6 @@
 ' These include the bool values, logical operators, mathematical operators,
 ' comparison operators, and conversion functions.
 
-@import sys
-
 ' The bool value 'true'.
 def true() => 1
 

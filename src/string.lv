@@ -1,8 +1,6 @@
 ' The string namespace contains function for operating
 ' on strings, such as slicing, indexing, and spliting.
 
-@import global using _
-
 ' ASCII Whitespace characters.
 def AsciiSpace() => " \t\n"
 

@@ -1,8 +1,6 @@
 ' The option namespace contains the Option monad which represents
 ' the possible absence of a value.
 
-@import global using _
-
 ' Returns Some(value) if value is defined, None otherwise
 (def Option(value)
     => Some(value) ; sys:defined(value)

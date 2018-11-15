@@ -2,7 +2,7 @@
 ' operations on lists. The list defined here is a linked list,
 ' in contrast to the built in vect type, which is random access.
 
-@import global using _, head as ghead, tail as gtail
+@import global using head as ghead, tail as gtail
 @import generator
 
 ' Returns a linked list with the given head and tail.
