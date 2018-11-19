@@ -1,17 +1,16 @@
 @import assert using assert
-@import util using Range, start, stop
+@import list using mklist
+@import util using range, to, until
 @import test
 
-def range() => Range(-5, 5)
+def r1() => range(-5, 5, 3)
+def r2() => -3 to 3
+def r3() => 1 until 5
+
+def vect(r) => mklist(r) toVect
 
 def main(args) => test:format(
-    assert(isObject(range), "isObject"),
-    assert(start(range) = -5, "start"),
-    assert(stop(range) = 5, "stop"),
-    assert(len(range) = 10, "len"),
-    assert(str(range) = "[-5..5)", "str"),
-    assert(2 in range, "2 in range"),
-    assert(7 notin range, "7 notin range"),
-    assert(3.5 notin range, "3.5 in range"),
-    assert(range toVect = {-5,-4,-3,-2,-1,0,1,2,3,4}, "toVect")
+    assert(vect(r1) = { -5, -2, 1, 4 }, "r1"),
+    assert(vect(r2) = { -3, -2, -1, 0, 1, 2, 3 }, "r2"),
+    assert(vect(r3) = { 1, 2, 3, 4 }, "r3")
 )

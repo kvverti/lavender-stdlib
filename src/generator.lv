@@ -2,7 +2,7 @@
 ' functions that take in an input (the seed) and return two outputs:
 ' the new seed and the output value.
 
-@import hof using Identity, bindRight
+@import hof using _
 
 ' Returns a generator which uses the given functions to generate new values.
 (def _Generator(seedFunc, valueFunc) =>
@@ -21,6 +21,10 @@ def withMap(seed, func, map) => _Generator(func, map)(func(seed), map(seed))
 
 ' Creates a generator from the given elements.
 def ofVect(...els) => _Generator(bindRight(\+\, 1), els)(1, els(0))
+
+' Creates a generator whose values are defined over the range starting at
+' `start` and iterating using the function `inc` until `while` returns false.
+def rangeOf(start, while, next) => of(start, next |> while)
 
 ' Seeds the given generator with the given value.
 def seed(gen, seed) => gen(seed, seed)

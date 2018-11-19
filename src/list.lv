@@ -15,7 +15,7 @@
         => head ; a = .head
         => tail ; a = .tail
         => 1 + len(tail) ; a = .len
-        => "[ " ++ (\obj fold ("", def(a, b) => a ++ str(b) ++ " ")) ++ "]" ; a = .str
+        => "[ " ++ (tail fold (str(head), def(ac, el) => ac ++ ", " ++ str(el))) ++ " ]" ; a = .str
         => (def(el) => head = el || (el in tail)) ; a = .in
         => (def(f) => f(head) :: (tail map f)) ; a = .map
         => (def(f) => f(head) ++ (tail flatmap f)) ; a = .flatmap
@@ -26,10 +26,7 @@
         => (def(id, f) => tail fold (f(id, head), f)) ; a = .fold
         => (def(list2) => head :: (tail ++ list2)) ; a = .cat
         => (def(obj2) => { head, ghead(obj2) } :: (tail zip gtail(obj2))) ; a = .zip
-        => \obj fold ({}, def(ac, el)
-            => sys:cat(ac, { el }) ; sys:typeof(el) = "vect"
-            => sys:cat(ac, el) ; 1
-        ) ; a = .toVect
+        => \obj fold ({}, def(ac, el) => ac ++ { el }) ; a = .toVect
     )
 )
 

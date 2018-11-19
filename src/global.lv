@@ -27,6 +27,8 @@ def Vect(a) => { a }
         => self ; sys:__eq__(a, .filter)
         => (def(id, f) => id) ; sys:__eq__(a, .fold)
         => (def(a) => a) ; sys:__eq__(a, .cat)
+        => self ; sys:__eq__(a, .takeWhile)
+        => self ; sys:__eq__(a, .skipWhile)
         => self ; sys:__eq__(a, .limit)
         => (def(bgn, end)
             => \value ; sys:__eq__(bgn, 0) && sys:__eq__(end, 0)

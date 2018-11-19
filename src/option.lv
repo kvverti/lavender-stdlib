@@ -11,6 +11,8 @@
 (def Some(a) =>
     (def obj(b)
         => __yes__ ; b = __object__
+        => a ; b = .head
+        => None ; b = .tail
         => 1 ; b = .len
         => "Some(" ++ str(a) ++ ")" ; b = .str
         => (def(f) => Option(f(a))) ; b = .map
@@ -18,8 +20,9 @@
         => (def(f)
             => \obj ; f(a)
             => None ; 1) ; b = .filter
-        => (def(obj2) => Some({ a, sys:cval(obj2, 0) })) ; b = .zip
+        => (def(obj2) => Some({ a, head(obj2) })) ; b = .zip
         => (def(id, f) => f(id, a)) ; b = .fold
+        => { a } ; b = .toVect
     )
 )
 

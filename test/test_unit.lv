@@ -22,5 +22,7 @@ def main(args) => test:format(
     assert((Unit limit 10) = Unit, "Unit limit"),
     assert((Unit slice (0, 0)) = Unit, "Unit slice"),
     assert((Unit slice (0, 10)) = sys:undefined, "Unit slice undefined"),
+    assert((Unit takeWhile \filterer) = Unit, "Unit takeWhile"),
+    assert((Unit skipWhile \filterer) = Unit, "Unit skipWhile"),
     assert((Unit toVect) = {}, "Unit toVect")
 )

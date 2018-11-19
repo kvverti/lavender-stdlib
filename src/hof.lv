@@ -121,7 +121,7 @@ def i_xor(f, g) => def impl(a) => f(a) ^ g(a)
 
 ' Returns the union of the given predicates. This is generally more
 ' space efficient than the equivalent construction using `or`.
-(def union(...preds)
+(def any(...preds)
     let siz(len(preds)) =>
     (def impl(a) =>
         (def call(idx)
@@ -134,7 +134,7 @@ def i_xor(f, g) => def impl(a) => f(a) ^ g(a)
 
 ' Returns the intersection of the given predicates. This is generally
 ' more space efficient than the equivalent construction using `and`.
-(def intersection(...preds)
+(def all(...preds)
     let siz(len(preds)) =>
     (def impl(a) =>
         (def call(idx)
