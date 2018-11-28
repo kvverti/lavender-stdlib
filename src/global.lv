@@ -39,6 +39,10 @@ def Vect(a) => { a }
 
 def _const(val) => def(a) => val
 
+' Calls the given function `f` with the given arguments. This operator is the
+' right associative, lowest precedence version of value calls.
+def r_$(f, ...args) => sys:call(f, args)
+
 ' The value passed by forwarding functions to determine if a function is
 ' object-like. Object-like functions should return the value __yes__ when
 ' passed this value.
@@ -341,7 +345,8 @@ def i_reduce(obj, func) => tail(obj) fold (head(obj), func)
         ; sys:__eq__(sys:typeof(obj), "vect")
     => _in_str(el, obj, sys:__sub__(sys:__len__(obj), sys:__len__(el)), sys:__len__(el))
         ; sys:__eq__(sys:typeof(obj), "string")
-    => obj(.in)(el) ; 1
+    => obj(.in)(el) ; isObject(obj) && sys:defined(obj(.in))
+    => sys:defined(obj(el)) ; sys:__eq__(sys:typeof(obj), "map")
 )
 
 ' Returns !(el in obj).

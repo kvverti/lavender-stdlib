@@ -67,6 +67,10 @@ def folding(id, func) => def impl(...vals) => vals fold (id, func)
 ' given combining function.
 def reducing(func) => def impl(head, ...tail) => tail fold (head, func)
 
+' Returns a function that concatenates two seqences together, using the
+' given sequence as a separator.
+def joining(val) => def impl(ac, el) => ac ++ val ++ el
+
 ' Returns a function that maps an object using the given function.
 def lift(func) => bindRight(\map\, func)
 
