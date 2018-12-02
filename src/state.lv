@@ -1,0 +1,48 @@
+' An abstraction of potentially mutable state. A State logically stores an
+' internal map of key-value pairs which may be thought of as variables.
+' States support the following functional operations:
+'   state flatmap (def(val) => State(deriv))
+'   state map (def(val) => deriv)
+
+@import hof using Constant, o
+
+' Creates a State representing the given transformation. The given
+' function should take one parameter, the current state, and return
+' a two-vect of `{ value, newStateDiff }`, where the second element
+' is a map which will be merged (as though by `++`) into the current
+' state.
+(def State(deriv)  =>
+    (def obj(a)
+        => __yes__ ; a = __object__
+        => (def(f) => _flatmap(\obj, f)) ; a = .flatmap
+        => (def(f) => _flatmap(\obj, \State o f)) ; a = .map
+    )
+)
+
+' The flatmap operation for State.
+(def _flatmap(self, f) =>
+    State(
+        def(st) let intermed(self runWith st) =>
+            f(intermed(0)) runWith intermed(1)
+    )
+)
+
+' Runs this State with the given initial state and returns the pair
+' { final value, final state }.
+' def i_runWith(self, initState) => native
+(def i_runWith(self, initState)
+    let valDiff(sys:cval(self, 0)(initState)) =>
+    { valDiff(0), initState ++ valDiff(1) }
+)
+
+' Runs this State with the given initial state and returns the final value.
+def i_evalWith(self, initState) => (self runWith initState)(0)
+
+' Returns a State initialized with the given initial state.
+def yield(val) => State(Constant { val, Unit })
+
+' Sets the value to the value assigned to the given key.
+def get(key) => State(def(st) => { st(key), Unit })
+
+' Assigns the given state key to the given value.
+def i_:=(key, val) => State(Constant { Unit, { key => val } })
