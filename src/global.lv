@@ -258,6 +258,20 @@ def -(a) => (a onlyIf isObject(a))(.neg) else sys:__neg__(a)
     => sys:__pow__(a, b) ; 1
 )
 
+' Arithmetic left shift function. Forwards if left shift is defined for
+' the left argument.
+(def i_<<(a, b)
+    => a(.shl)(b) ; isObject(a)
+    => sys:__shl__(a, b) ; 1
+)
+
+' Arithmetic right shift function. Forwards if right shift is defined for
+' the left argument.
+(def i_>>(a, b)
+    => a(.shr)(b) ; isObject(a)
+    => sys:__shr__(a, b) ; 1
+)
+
 ' Maps each element of the given object using the given mapping
 ' function.
 (def i_map(obj, func) =>
@@ -295,8 +309,9 @@ def i_then(obj, val) => obj flatmap _const(val)
 
 ' Combines the elements of the given object according to the
 ' given fold function with the given initial value.
-(def i_fold(obj, id, func) =>
-    (obj onlyIf isObject(obj))(.fold)(id, func) else sys:__fold__(obj, id, func)
+(def i_fold(obj, id, func)
+    => obj(.fold)(id, func) ; isObject(obj)
+    => sys:__fold__(obj, id, func) ; 1
 )
 
 ' Combines the elements of the given object according to the given fold
