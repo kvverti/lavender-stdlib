@@ -132,11 +132,14 @@ def i_onlyIf(=> expr, pred) => expr ; pred
 ' Returns !(a = b)
 def i_!=(a, b) => !(a = b)
 
-' Less than function. Forwards if less than is defined for both arguments.
-' The comparision functions impose a total ordering on all values in Lavender
+' Less than comparison function. Forwards if comparison is overridden.
+' The comparison functions impose a total ordering on all values in Lavender
 ' as follows:
 '   - If both arguments are numbers, compares mathematically*.
 '   - If both arguments are strings, compares lexicographically.
+'   - If both arguments are vects, compares first by length, then by element.
+'   - If both arguments are maps, compares first by length, then by element.
+'   - If both arguments are symbols, compares using some consistent ordering.
 '   - If both arguments are functions, compares the base functions
 '     using an arbitrary, but consistent ordering.
 '     If the base functions are equal, they compare the same as their first differing

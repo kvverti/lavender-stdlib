@@ -24,7 +24,7 @@ def ofVect(...els) => _Generator(bindRight(\+\, 1), els)(1, els(0))
 
 ' Creates a generator whose values are defined over the range starting at
 ' `start` and iterating using the function `inc` until `while` returns false.
-def rangeOf(start, while, next) => of(start, next |> while)
+def rangeOf(start, while, next) => withMap(start, next, Identity <| while)
 
 ' Seeds the given generator with the given value.
 def seed(gen, seed) => gen(seed, seed)

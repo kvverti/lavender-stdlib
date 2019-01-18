@@ -44,8 +44,18 @@ def r_::(head, tail) => List(head, tail)
 ' Uses the given generator to generate a list.
 ' The generator is iterated until it returns `undefined`.
 ' The generator should be finitely iterable.
-(def mklist(gen)
+def mklist(gen) => reverse(_mklist(gen, Nil))
+
+(def _mklist(gen, ac)
     let val(generator:value(gen))
-    => val :: mklist(generator:next(gen)) ; sys:defined(val)
-    => Nil ; 1
+    => _mklist(generator:next(gen), val :: ac) ; sys:defined(val)
+    => ac ; 1
+)
+
+' Reverses the given list.
+def reverse(list) => _reverse(list, Nil)
+
+(def _reverse(ls, ac)
+    => ac ; ls = Nil
+    => _reverse(tail(ls), head(ls) :: ac) ; 1
 )
