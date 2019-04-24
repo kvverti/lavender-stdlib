@@ -310,12 +310,6 @@ def _StreamZipped(seq1, seq2) => _StreamWrapper(_zippedGen(seq1, seq2), _Extract
     } ; sys:defined(val) && sys:defined(otherVal)
 )
 
-' Returns the transformed value for the given generator, using the operations
-' defined by the given stream. The result is a vect of two elements: the first
-' is the next generator to use, and the second is the resultant value. Returns
-' `undefined` if the stream is exhausted with the given generator.
-'     def transValue(stream, gen) => stream(.transValue)(gen)
-
 ' Helper function for folding streams. The folding stops when the
 ' value returned by the transformations is `undefined`.
 (def _folder(stream, func) =>

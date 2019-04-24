@@ -39,10 +39,6 @@ def Vect(a) => { a }
 
 def _const(val) => def(a) => val
 
-' Calls the given function `f` with the given arguments. This operator is the
-' right associative, lowest precedence version of value calls.
-def r_$(f, ...args) => sys:call(f, args)
-
 ' The value passed by forwarding functions to determine if a function is
 ' object-like. Object-like functions should return the value __yes__ when
 ' passed this value.
@@ -68,8 +64,8 @@ def isObject(a) => sys:__eq__(a(__object__), __yes__)
 ' after converting both to bool. This function
 ' short-circuits the result if possible.
 (def i_&&(a, => b)
-    => bool(b) ; bool(a)
-    => 0 ; 1
+    => b ; bool(a)
+    => a ; 1
 )
 
 ' Non-short-circuiting version of '&&'.
@@ -79,8 +75,8 @@ def i_&(a, b) => a && b
 ' after converting both to bool. This function
 ' short-circuits the result if possible.
 (def i_||(a, => b)
-    => 1 ; bool(a)
-    => bool(b) ; 1
+    => a ; bool(a)
+    => b ; 1
 )
 
 ' Non-short-circuiting version of '||'.
@@ -123,11 +119,7 @@ def i_onlyIf(=> expr, pred) => expr ; pred
 '
 ' * The only value which breaks reflexivity is the floating point
 '   NaN value.
-(def i_=(a, b)
-    => a(.eq)(b) ; sys:defined((a onlyIf isObject(a))(.eq))
-                && sys:defined((b onlyIf isObject(b))(.eq))
-    => sys:__eq__(a, b) ; 1
-)
+def i_=(a, b) => sys:__eq__(a, b)
 
 ' Returns !(a = b)
 def i_!=(a, b) => !(a = b)
@@ -148,19 +140,10 @@ def i_!=(a, b) => !(a = b)
 '     objects' type.
 '
 ' * NaN always compares false with anything, even itself.
-(def i_<(a, b)
-    => a(.lt)(b) ; sys:defined((a onlyIf isObject(a))(.lt))
-                && sys:defined((b onlyIf isObject(b))(.lt))
-    => sys:__lt__(a, b) ; 1
-)
+def i_<(a, b) => sys:__lt__(a, b)
 
 ' Greater than or equal comparision function.
-(def i_>=(a, b)
-    ' We do this because NaN always compares false.
-    => !(a(.lt)(b)) ; sys:defined((a onlyIf isObject(a))(.lt))
-                    && sys:defined((b onlyIf isObject(b))(.lt))
-    => sys:__ge__(a, b) ; 1
-)
+def i_>=(a, b) => sys:__ge__(a, b)
 
 ' Greater than comparision function.
 def i_>(a, b) => b < a
@@ -169,9 +152,8 @@ def i_>(a, b) => b < a
 def i_<=(a, b) => b >= a
 
 ' Returns a hash of the given value. The hash of a value is an integral
-' value that may be used to short-circuit comparisons. The hash of a value
-' must be consistent with its equality (equal values must have equal hashes).
-def hash(a) => (a onlyIf isObject(a))(.hash) else sys:__hash__(a)
+' value that may be used to short-circuit comparisons.
+def hash(a) => sys:__hash__(a)
 
 ' Converts argument to a string. Forwards if possible.
 def str(a) => (a onlyIf isObject(a))(.str) else sys:__str__(a)

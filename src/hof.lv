@@ -59,6 +59,10 @@ def bindRight(op, right) => def impl(left) => op(left, right)
 ' Returns a function that calls its argument with the given args.
 def withArgs(...args) => bindRight(\sys:call, args)
 
+' Returns a single arity function that takes a vect of arguments
+' and forwards them elementwise to `f`.
+def packed(f) => bindLeft(f, \sys:call)
+
 ' Returns a function that folds any number of values using the given
 ' combining function.
 def folding(id, func) => def impl(...vals) => vals fold (id, func)
@@ -76,7 +80,7 @@ def lift(func) => bindRight(\map\, func)
 
 ' Returns a binary function that applies the given binary function to the
 ' elements of its argument objects.
-def lift2(func) => def(a, b) => a zip b map bindLeft(func, \sys:call)
+def lift2(func) => def(a, b) => a zip b map packed(func)
 
 ' Returns the curried version of the given poly-arity function. The function
 ' must have fixed arity greater than or equal to 1.
