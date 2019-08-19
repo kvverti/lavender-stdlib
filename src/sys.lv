@@ -27,6 +27,12 @@ def call(func, args) => native
 ' Returns the symbol associated with the given string.
 def symb(str) => native
 
+' Dynamically looks up a function based on another value. The function name
+' to look up is given by the function `nmVal` and the namespace to look in is
+' given by the namespace in which `nsVal` is defined. If no function is found,
+' then `fall` is returned.
+def lookup(nmVal, nsVal, fall) => native
+
 ' The following functions are stubs for basic operations on the built in types
 ' num, int, str, and vect. You should not consider these to be part of the
 ' sys public API.
