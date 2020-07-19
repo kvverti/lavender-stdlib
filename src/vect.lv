@@ -1,0 +1,43 @@
+' Defines utility functions operating on vect values and
+' defines overrides for functional operations on vect values.
+
+' Function in the vect namespace.
+def nspace() => def value(a) => sys:undefined
+
+' Returns a singleton vect containing the element `a`. This function
+' may be passed an argument to a higher-order function.
+def Vect(a) => { a }
+
+def __virt__(a) => a ; sys:typeof(a) = .vect
+
+def str(a) => native
+
+def i_++(a, b) => __cat__(a, b)
+
+def i_=(a, b) => __eq__(a, b)
+
+def i_<(a, b) => __lt__(a, b)
+
+def len(a) => native
+
+def i_map(a, f) => __map__(a, f)
+
+def i_filter(a, f) => __filter__(a, f)
+
+def i_fold(a, z, f) => __fold__(a, z, f)
+
+def i_slice(a, bgn, end) => __slice__(a, bgn, end)
+
+def i_takeWhile(a, f) => __take__(a, f)
+
+def i_skipWhile(a, f) => __skip__(a, f)
+
+def __cat__(a, b) => native
+def __eq__(a, b) => native
+def __lt__(a, b) => native
+def __map__(a, f) => native
+def __filter__(a, f) => native
+def __fold__(a, z, f) => native
+def __slice__(a, bgn, end) => native
+def __take__(a, f) => native
+def __skip__(a, f) => native

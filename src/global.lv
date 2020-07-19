@@ -11,6 +11,23 @@ def false() => 0
 ' Alternative spelling of 'true'.
 def otherwise() => 1
 
+' Dynamically looks up a function based on a value for the purpose of implementing
+' argument-dependent lookup. This function is much like `sys:lookup`, but only
+' returns matches if `nmVal` satisfies the dynamically looked up predicate
+' `__virt__(nmVal)`. Additionally, recursive matches (i.e. when nmVal and nsVal
+' share the same namespace) are not returned through this function.
+(def virt(nmVal, nsVal, fall)
+    => (def(a)
+        => a ; !sys:__eq__(a, nmVal)
+        => fall ; 1
+    )(sys:lookup(nmVal, nsVal, fall))
+        ; sys:lookup(\__virt__, nsVal, \__virt__)(nmVal)
+    => fall ; 1
+)
+
+' The default virtual predicate, i.e. one that always succeeds.
+def __virt__(a) => 1
+
 ' Returns a singleton vect containing `a`.
 def Vect(a) => { a }
 
@@ -156,7 +173,8 @@ def i_<=(a, b) => b >= a
 def hash(a) => sys:__hash__(a)
 
 ' Converts argument to a string. Forwards if possible.
-def str(a) => (a onlyIf isObject(a))(.str) else sys:__str__(a)
+' def str(a) => (a onlyIf isObject(a))(.str) else sys:__str__(a)
+def str(a) => virt(\str, a, \sys:__str__)(a)
 
 ' Converts argument to number. Forwards if possible.
 def num(a) => (a onlyIf isObject(a))(.num) else sys:__num__(a)
